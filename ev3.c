@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <unistd.h>
+#include <stdarg.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
@@ -160,11 +161,15 @@ void ev3_fb_clean()
   memset(ev3_fb, 0, 7680);
 }
 
-void ev3_fb_print(uint16_t x, uint16_t y, uint8_t *buffer, uint8_t size)
+void ev3_fb_printf(int x, int y, const char *format, ...)
 {
-  uint8_t i, j;
-  uint16_t code;
-  for(i = 0; i < size; ++i)
+  int i, j, code;
+  char buffer[241];
+  va_list args;
+  va_start(args, format);
+  vsnprintf(buffer, 241, format, args);
+  va_end(args);
+  for(i = 0; i < 241; ++i)
   {
     if(buffer[i] == 0) return;
     code = buffer[i] - 32;
