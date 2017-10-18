@@ -191,20 +191,20 @@ void ev3_uart_mode(int port, int mode, int conn, int type)
 
 int ev3_output_test(int mask)
 {
-  char buffer[11];
+  char buffer[5];
   int test1, test2;
-  memset(buffer, 0, 11);
-  read(ev3_fd_pwm, buffer, 10);
+  memset(buffer, 0, 5);
+  read(ev3_fd_pwm, buffer, 4);
   sscanf(buffer, "%d %d", &test1, &test2);
-  return (mask & test2) ? 1 : 0;
+  return (mask & test1) ? 1 : 0;
 }
 
 void ev3_output_wait(int mask)
 {
   while(1)
   {
-    usleep(1000);
     if(!ev3_output_test(mask)) break;
+    usleep(1000);
   }
 }
 
@@ -214,6 +214,15 @@ void ev3_output_stop(int mask, int brake)
   buffer[0] = 0xA3;
   buffer[1] = mask;
   buffer[2] = brake;
+  write(ev3_fd_pwm, buffer, 3);
+}
+
+void ev3_output_power(int mask, int power)
+{
+  int8_t buffer[3];
+  buffer[0] = 0xA4;
+  buffer[1] = mask;
+  buffer[2] = power;
   write(ev3_fd_pwm, buffer, 3);
 }
 
@@ -243,6 +252,32 @@ void ev3_output_polarity(int mask, int polarity)
   write(ev3_fd_pwm, buffer, 3);
 }
 
+void ev3_output_step_power(int mask, int power, int step1, int step2, int step3, int brake)
+{
+  struct {int8_t command; int8_t mask; int8_t power; int32_t step1; int32_t step2; int32_t step3; int8_t brake;} buffer;
+  buffer.command = 0xAC;
+  buffer.mask = mask;
+  buffer.power = power;
+  buffer.step1 = step1;
+  buffer.step2 = step2;
+  buffer.step3 = step3;
+  buffer.brake = brake;
+  write(ev3_fd_pwm, &buffer, sizeof(buffer));
+}
+
+void ev3_output_time_power(int mask, int power, int time1, int time2, int time3, int brake)
+{
+  struct {int8_t command; int8_t mask; int8_t power; int32_t time1; int32_t time2; int32_t time3; int8_t brake;} buffer;
+  buffer.command = 0xAD;
+  buffer.mask = mask;
+  buffer.power = power;
+  buffer.time1 = time1;
+  buffer.time2 = time2;
+  buffer.time3 = time3;
+  buffer.brake = brake;
+  write(ev3_fd_pwm, &buffer, sizeof(buffer));
+}
+
 void ev3_output_step_speed(int mask, int speed, int step1, int step2, int step3, int brake)
 {
   struct {int8_t command; int8_t mask; int8_t speed; int32_t step1; int32_t step2; int32_t step3; int8_t brake;} buffer;
@@ -256,6 +291,19 @@ void ev3_output_step_speed(int mask, int speed, int step1, int step2, int step3,
   write(ev3_fd_pwm, &buffer, sizeof(buffer));
 }
 
+void ev3_output_time_speed(int mask, int speed, int time1, int time2, int time3, int brake)
+{
+  struct {int8_t command; int8_t mask; int8_t speed; int32_t time1; int32_t time2; int32_t time3; int8_t brake;} buffer;
+  buffer.command = 0xAF;
+  buffer.mask = mask;
+  buffer.speed = speed;
+  buffer.time1 = time1;
+  buffer.time2 = time2;
+  buffer.time3 = time3;
+  buffer.brake = brake;
+  write(ev3_fd_pwm, &buffer, sizeof(buffer));
+}
+
 void ev3_output_step_sync(int mask, int speed, int turn, int step, int brake)
 {
   struct {int8_t command; int8_t mask; int8_t speed; int16_t turn; int32_t step; int8_t brake;} buffer;
@@ -264,6 +312,18 @@ void ev3_output_step_sync(int mask, int speed, int turn, int step, int brake)
   buffer.speed = speed;
   buffer.turn = turn;
   buffer.step = step;
+  buffer.brake = brake;
+  write(ev3_fd_pwm, &buffer, sizeof(buffer));
+}
+
+void ev3_output_time_sync(int mask, int speed, int turn, int time, int brake)
+{
+  struct {int8_t command; int8_t mask; int8_t speed; int16_t turn; int32_t time; int8_t brake;} buffer;
+  buffer.command = 0xB1;
+  buffer.mask = mask;
+  buffer.speed = speed;
+  buffer.turn = turn;
+  buffer.time = time;
   buffer.brake = brake;
   write(ev3_fd_pwm, &buffer, sizeof(buffer));
 }
