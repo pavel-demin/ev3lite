@@ -14,17 +14,17 @@ int main()
 
   ev3_fb_clean();
 
-  ev3_fb_printf(2, 7, "Press BACK");
+  ev3_fb_printf(7, 2, "Press BACK");
 
   while(1)
   {
     usleep(1000);
 
     value = ev3_analog->Pin6[0][ev3_analog->Actual[0]] > 416;
-    ev3_fb_printf(1, 2, "IN 1: %4d", value);
+    ev3_fb_printf(2, 1, "IN 1: %4d", value);
 
     value = ev3_uart->Raw[3][ev3_uart->Actual[3]][0];
-    ev3_fb_printf(1, 4, "IN 4: %4d", value);
+    ev3_fb_printf(4, 1, "IN 4: %4d", value);
 
     if(ev3_ui->Pressed[5]) break;
   }

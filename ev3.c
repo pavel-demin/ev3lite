@@ -161,7 +161,7 @@ void ev3_fb_clean()
   memset(ev3_fb, 0, 7680);
 }
 
-void ev3_fb_printf(int x, int y, const char *format, ...)
+void ev3_fb_printf(int row, int column, const char *format, ...)
 {
   int i, j, code;
   char buffer[241];
@@ -175,7 +175,7 @@ void ev3_fb_printf(int x, int y, const char *format, ...)
     code = buffer[i] - 32;
     for(j = 0; j < 16; ++j)
     {
-      ev3_fb[y * 240 + j * 15 + x + i] = font10x16[code * 16 + j];
+      ev3_fb[row * 240 + j * 15 + column + i] = font10x16[code * 16 + j];
     }
   }
 }
