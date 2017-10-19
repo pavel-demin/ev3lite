@@ -16,13 +16,6 @@ struct UI
   int8_t Pressed[6];
 };
 
-struct MOTORDATA
-{
-  int32_t TachoCounts;
-  int8_t Speed;
-  int32_t TachoSensor;
-};
-
 struct DEVCON
 {
   int8_t Connection[4];
@@ -112,11 +105,19 @@ struct ANALOG
   uint16_t PreemptMilliSeconds;
 };
 
-int ev3_fd_pwm, ev3_fd_fb, ev3_fd_ui, ev3_fd_uart, ev3_fd_analog;
+struct MOTOR
+{
+  int32_t TachoCounts;
+  int8_t Speed;
+  int32_t TachoSensor;
+};
+
+int ev3_fd_pwm, ev3_fd_fb, ev3_fd_ui, ev3_fd_uart, ev3_fd_analog, ev3_fd_motor;
 uint32_t *ev3_fb;
 struct UI *ev3_ui;
 struct UART *ev3_uart;
 struct ANALOG *ev3_analog;
+struct MOTOR *ev3_motor;
 
 void ev3_init()
 {
@@ -150,10 +151,17 @@ void ev3_init()
     exit(EXIT_FAILURE);
   }
 
+  if((ev3_fd_motor = open("/dev/lms_motor", O_RDWR | O_SYNC)) < 0)
+  {
+    perror("open");
+    exit(EXIT_FAILURE);
+  }
+
   ev3_fb = mmap(NULL, 7680, PROT_READ | PROT_WRITE, MAP_FILE | MAP_SHARED, ev3_fd_fb, 0);
   ev3_ui = mmap(NULL, sizeof(struct UI), PROT_READ | PROT_WRITE, MAP_FILE | MAP_SHARED, ev3_fd_ui, 0);
   ev3_uart = mmap(NULL, sizeof(struct UART), PROT_READ | PROT_WRITE, MAP_FILE | MAP_SHARED, ev3_fd_uart, 0);
   ev3_analog = mmap(NULL, sizeof(struct ANALOG), PROT_READ | PROT_WRITE, MAP_FILE | MAP_SHARED, ev3_fd_analog, 0);
+  ev3_motor = mmap(NULL, 4 * sizeof(struct MOTOR), PROT_READ | PROT_WRITE, MAP_FILE | MAP_SHARED, ev3_fd_motor, 0);
 }
 
 void ev3_fb_clean()
