@@ -10,22 +10,14 @@ void *dinor3x(void *arg)
 
   ev3_output_time_sync(0x06, 20, 50, 0, 0);
 
-  while(1)
-  {
-    if(ev3_analog->InPin6[0] < 500) break;
-    usleep(1000);
-  }
+  while(ev3_analog->InPin6[0] > 500) usleep(1000);
 
   ev3_output_stop(0x06, 1);
 
   ev3_output_speed(0x02, 40);
   ev3_output_start(0x02);
 
-  while(1)
-  {
-    if(ev3_analog->InPin6[0] > 500) break;
-    usleep(1000);
-  }
+  while(ev3_analog->InPin6[0] < 500) usleep(1000);
 
   ev3_output_stop(0x02, 1);
 
@@ -35,11 +27,7 @@ void *dinor3x(void *arg)
   ev3_output_speed(0x04, 40);
   ev3_output_start(0x04);
 
-  while(1)
-  {
-    if(ev3_analog->InPin6[0] > 500) break;
-    usleep(1000);
-  }
+  while(ev3_analog->InPin6[0] < 500) usleep(1000);
 
   ev3_output_stop(0x04, 1);
 
@@ -57,11 +45,7 @@ void *dinor3x(void *arg)
   {
     ev3_output_time_sync(0x06, -40, 0, 0, 0);
 
-    while(1)
-    {
-      if(ev3_uart->Raw[3][ev3_uart->Actual[3]][0] < 25) break;
-      usleep(1000);
-    }
+    while(ev3_uart->Raw[3][ev3_uart->Actual[3]][0] > 25) usleep(1000);
 
     ev3_output_stop(0x06, 0);
 
@@ -86,6 +70,7 @@ void *dinor3x(void *arg)
 int main()
 {
   pthread_t thread;
+  int value;
 
   ev3_init();
 
@@ -95,9 +80,18 @@ int main()
     return EXIT_FAILURE;
   }
 
-  while(1)
+  ev3_fb_clean();
+
+  ev3_fb_printf(7, 2, "Press BACK");
+
+  while(!ev3_ui->Pressed[5])
   {
-    if(ev3_ui->Pressed[5]) break;
+    value = ev3_analog->InPin6[0] > 500;
+    ev3_fb_printf(2, 1, "IN 1: %4d", value);
+
+    value = ev3_uart->Raw[3][ev3_uart->Actual[3]][0];
+    ev3_fb_printf(4, 1, "IN 4: %4d", value);
+
     usleep(1000);
   }
 
