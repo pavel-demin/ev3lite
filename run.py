@@ -23,7 +23,7 @@ def upload(port, path, data):
   buffer.append(0x01)
   buffer.append(0x92)
   buffer.extend(struct.pack('<I', size))
-  buffer.extend(path.encode('utf-8'))
+  buffer.extend(path.encode('ascii'))
   buffer.append(0x00)
 
   result = send(port, buffer)
@@ -55,13 +55,11 @@ def upload(port, path, data):
       sys.exit('upload error')
 
 def start(port, path):
-  size = len(path) + 25
-
   buffer = bytearray()
 
-  buffer.extend(struct.pack('<H', size))
+  buffer.extend(struct.pack('<H', len(path) + 25))
   buffer.extend(bytes.fromhex('3412800020c00882010084'))
-  buffer.extend(path.encode('utf-8'))
+  buffer.extend(path.encode('ascii'))
   buffer.extend(bytes.fromhex('00c100c10403820100c100c10400'))
 
   port.write(buffer)
