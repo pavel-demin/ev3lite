@@ -6,9 +6,7 @@ import serial
 def send(port, code, data):
   buffer = bytearray()
   buffer.extend(struct.pack('<H', len(data) + 4))
-  buffer.append(0x34)
-  buffer.append(0x12)
-  buffer.append(0x01)
+  buffer.extend(bytes.fromhex('341201'))
   buffer.append(code)
 
   port.write(buffer)
