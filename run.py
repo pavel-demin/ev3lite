@@ -34,7 +34,7 @@ def upload(port, path, data):
 
     offset = 0
 
-    while (offset < length):
+    while offset < length:
         buffer = bytearray()
         buffer.append(handle)
 
