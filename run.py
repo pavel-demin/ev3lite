@@ -70,11 +70,11 @@ path = '../prjs/%s/%s' % (name, name)
 
 command = 'arm-none-linux-gnueabi-gcc %s.c -o %s -lm -lpthread' % (name, name)
 if os.system(command):
-    sys.exit('compilation error')
+    sys.exit('gcc error')
 
 command = 'arm-none-linux-gnueabi-strip %s' % name
 if os.system(command):
-    sys.exit('compilation error')
+    sys.exit('strip error')
 
 port = serial.Serial('/dev/rfcomm0', 115200)
 
