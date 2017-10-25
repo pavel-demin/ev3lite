@@ -28,17 +28,17 @@ def upload(port, path, data):
   buffer.extend(path.encode('ascii'))
   buffer.append(0x00)
 
-  result = send(port, 0x92, buffer)
+  handle = send(port, 0x92, buffer)
 
   offset = 0
 
   while(offset < length):
     buffer = bytearray()
-    buffer.append(result)
+    buffer.append(handle)
 
-    if(offset + 1016 < length):
-      buffer.extend(data[offset:offset + 1016])
-      offset += 1016
+    if(offset + 1017 < length):
+      buffer.extend(data[offset:offset + 1017])
+      offset += 1017
     else:
       buffer.extend(data[offset:])
       offset = length
