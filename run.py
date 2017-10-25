@@ -47,10 +47,10 @@ def upload(port, path, data):
 
 def start(port, path):
   buffer = bytearray()
-  buffer.extend(struct.pack('<H', len(path) + 25))
-  buffer.extend(bytes.fromhex('3412800020c00882010084'))
+  buffer.extend(struct.pack('<H', len(path) + 17))
+  buffer.extend(bytes.fromhex('3412800020c0080184'))
   buffer.extend(path.encode('ascii'))
-  buffer.extend(bytes.fromhex('00c100c10403820100c100c10400'))
+  buffer.extend(bytes.fromhex('0040440301404400'))
   port.write(buffer)
 
 def wrap(path):
