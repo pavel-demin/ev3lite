@@ -183,7 +183,7 @@ void ev3_fb_printf(int row, int column, const char *format, ...)
     code = buffer[i] - 32;
     for(j = 0; j < 16; ++j)
     {
-      ev3_fb[row * 240 + j * 15 + column + i] = font10x16[code * 16 + j];
+      ev3_fb[row * 240 + j * 15 + column + i] = font10x16[code * 8 + (j >> 1)];
     }
   }
 }
