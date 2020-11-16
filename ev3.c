@@ -172,18 +172,19 @@ void ev3_fb_clean()
 void ev3_fb_printf(int row, int column, const char *format, ...)
 {
   int i, j, code;
-  char buffer[241];
+  char buffer[121];
   va_list args;
   va_start(args, format);
-  vsnprintf(buffer, 241, format, args);
+  vsnprintf(buffer, 121, format, args);
   va_end(args);
-  for(i = 0; i < 241; ++i)
+  for(i = column; i < 120 - row * 15; ++i)
   {
-    if(buffer[i] == 0) return;
-    code = buffer[i] - 32;
+    code = buffer[i - column];
+    if(code == 0) return;
+    code -= 32;
     for(j = 0; j < 16; ++j)
     {
-      ev3_fb[row * 240 + j * 15 + column + i] = font10x16[code * 8 + (j >> 1)];
+      ev3_fb[(row + i / 15) * 240 + j * 15 + i % 15] = font10x16[code * 8 + (j >> 1)];
     }
   }
 }
