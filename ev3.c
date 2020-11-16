@@ -189,12 +189,12 @@ void ev3_fb_printf(int row, int column, const char *format, ...)
   }
 }
 
-void ev3_uart_mode(int port, int mode, int conn, int type)
+void ev3_uart_mode(int port, int mode)
 {
   struct DEVCON buffer;
   buffer.Mode[port] = mode;
-  buffer.Connection[port] = conn;
-  buffer.Type[port] = type;
+  buffer.Connection[port] = 122;
+  buffer.Type[port] = 0;
   ioctl(ev3_fd_uart, _IOWR('u', 0, struct DEVCON), &buffer);
 }
 
