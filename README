@@ -10,7 +10,7 @@ Installing compiler:
 
 Installing required packages:
 
-  sudo apt-get install bluez python3-serial
+  sudo apt-get install bluez
 
 Bluetooth pairing with EV3:
 
@@ -23,14 +23,6 @@ Bluetooth pairing with EV3:
   [agent] Enter PIN code: 1234
   [bluetooth]# quit
 
-Binding EV3 to rfcomm0:
-
-  sudo rfcomm bind /dev/rfcomm0 XX:XX:XX:XX:XX:XX
-
-Adding user to group dialout:
-
-  sudo adduser <username> dialout
-
 Compiling and running program on EV3:
 
-  python3 run.py test
+  python3 run.py XX:XX:XX:XX:XX:XX test
