@@ -59,7 +59,7 @@ def wrap(path):
     buffer = bytearray()
     buffer.extend(b'LEGO')
     buffer.extend(struct.pack('<I', len(path) + 40))
-    buffer.extend(bytes.fromhex('6d000100000000001c00000000000000080000006080'))
+    buffer.extend(bytes.fromhex('6d000100000000001c00000000000000080000006084'))
     buffer.extend(path.encode('ascii'))
     buffer.extend(bytes.fromhex('00448582e8034086400a'))
     return buffer
