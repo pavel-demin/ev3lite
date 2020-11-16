@@ -58,10 +58,10 @@ def start(port, path):
 def wrap(path):
     buffer = bytearray()
     buffer.extend(b'LEGO')
-    buffer.extend(struct.pack('<I', len(path) + 40))
-    buffer.extend(bytes.fromhex('6d000100000000001c00000000000000080000006084'))
+    buffer.extend(struct.pack('<I', len(path) + 42))
+    buffer.extend(bytes.fromhex('6d000100000000001c00000000000000040000006084'))
     buffer.extend(path.encode('ascii'))
-    buffer.extend(bytes.fromhex('00408582e8034486440a'))
+    buffer.extend(bytes.fromhex('00408413000000840083040a'))
     return buffer
 
 name = sys.argv[1]
